@@ -110,7 +110,8 @@ public class Ship : MonoBehaviour {
         return connected;
     }
 
-    private Part TraversingAttach(Part origin, Part lastAttachedPart) {
+    private void TraversingAttach(Part origin, out Part lastAttachedPart) {
+        lastAttachedPart = null;
         foreach (var connector in origin.Connectors) {
             var nextPart = FindPartByPoint(connector.ShipRelativePosition + connector.Direction);
             if (nextPart != null) {
@@ -118,11 +119,11 @@ public class Ship : MonoBehaviour {
                     continue;
                 }
                 if (TryAttach(nextPart)) {
-                    lastAttachedPart = TraversingAttach(nextPart, lastAttachedPart);
+                    TraversingAttach(nextPart, out Part lastPart);
+                    lastAttachedPart = lastPart;
                 }
             }
         }
-        return lastAttachedPart;
     }
 
     public void ReattachPartsFromCore() {
@@ -131,7 +132,8 @@ public class Ship : MonoBehaviour {
                 DetachPart(part);
             }
         }
-        OnPartAttached?.Invoke(TraversingAttach(CorePart, CorePart));
+        TraversingAttach(CorePart, out Part lastAttachedPart);
+        OnPartAttached?.Invoke(lastAttachedPart);
         if (_state == ShipState.Flying) {
             List<Part> removed = new();
             foreach (var part in _parts) {
