@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[ExecuteAlways]
 public class Connector : MonoBehaviour {
     private Part _parrentPart;
 
@@ -35,7 +36,17 @@ public class Connector : MonoBehaviour {
     }
 
     private void Awake() {
-        _parrentPart = GetComponentInParent<Part>();
+        if (Application.isPlaying)
+            _parrentPart = GetComponentInParent<Part>();
+    }
+
+    private void Update() {
+        if (!Application.isPlaying) {
+            Vector3 pos = transform.position;
+            pos.x = Mathf.Round(pos.x);
+            pos.y = Mathf.Round(pos.y);
+            transform.position = pos;
+        }
     }
 
     private void OnValidate() {

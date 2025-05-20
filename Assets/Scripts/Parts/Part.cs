@@ -7,20 +7,20 @@ public class Part : MonoBehaviour, IDamageable {
     [SerializeField] private Vector2Int _size;
     public Vector2Int Size => _size;
 
+    [SerializeField] private Vector2Int _position;
+    public Vector2Int Position => _position;
+    [SerializeField] private Quaternion _rotation;
+    public Quaternion Rotation => _rotation;
+    public Vector2 Center => (Vector2)Size / 2 - Vector2.one * .5f;
+
+    private List<Connector> _connectors = new();
+    public IReadOnlyList<Connector> Connectors => _connectors;
+
     [SerializeField] private int _maxHealth;
     private int _health;
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
     private Color _defaultColor;
-
-    private List<Connector> _connectors = new();
-    public IReadOnlyList<Connector> Connectors => _connectors;
-
-    [SerializeField] private Vector2Int _position;
-    public Vector2Int Position => _position;
-    private Quaternion _rotation;
-    public Quaternion Rotation => _rotation;
-    public Vector2 Center => (Vector2)Size / 2 - Vector2.one * .5f;
 
     public Ship Ship { get; set; }
     private BoxCollider2D _collider;
